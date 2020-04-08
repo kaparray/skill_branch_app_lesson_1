@@ -1,4 +1,4 @@
-package com.example.skill_branch_app_lesson_1
+package ru.skillbranch.galleryapp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
