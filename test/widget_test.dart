@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:skill_branch_lesson_dart/screens/feed_screen.dart';
-import 'package:skill_branch_lesson_dart/screens/photo_screen.dart';
-import 'package:skill_branch_lesson_dart/widgets/widgets.dart';
+import '../lib/screens/feed_screen.dart';
+import '../lib/screens/photo_screen.dart';
+import '../lib/widgets/widgets.dart';
 
 void main() {
   // testWidgets('LikeButton', (WidgetTester tester) async {
