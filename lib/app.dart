@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skill_branch_lesson_dart/screens/feed_screen.dart';
+
+import 'screens/home.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -7,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Feed(),
+      home: Home(),
     );
   }
 }

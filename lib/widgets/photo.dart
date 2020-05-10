@@ -1,6 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:skill_branch_lesson_dart/res/res.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:FlutterGalleryApp/res/res.dart';
 
 class Photo extends StatelessWidget {
   Photo({Key key, this.photoLink}) : super(key: key);

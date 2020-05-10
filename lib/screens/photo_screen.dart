@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skill_branch_lesson_dart/res/res.dart';
-import 'package:skill_branch_lesson_dart/widgets/widgets.dart';
+
+import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
 class FullScreenImage extends StatefulWidget {
   FullScreenImage({
@@ -10,6 +11,7 @@ class FullScreenImage extends StatefulWidget {
     this.userName = '',
     this.name = '',
     this.userPhoto = '',
+    this.heroTag,
     Key key,
   }) : super(key: key);
 
@@ -18,6 +20,7 @@ class FullScreenImage extends StatefulWidget {
   final String userName;
   final String name;
   final String userPhoto;
+  final String heroTag;
 
   @override
   State<StatefulWidget> createState() {
@@ -25,7 +28,53 @@ class FullScreenImage extends StatefulWidget {
   }
 }
 
-class FullScreenImageState extends State<FullScreenImage> {
+class FullScreenImageState extends State<FullScreenImage> with TickerProviderStateMixin {
+  AnimationController controller;
+  Animation<double> opacityDescription;
+  Animation<double> opacityAvatar;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+
+    opacityDescription = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(
+          0.5,
+          1.0,
+          curve: Curves.ease,
+        ),
+      ),
+    );
+
+    opacityAvatar = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(
+          0.0,
+          1.0,
+          curve: Curves.ease,
+        ),
+      ),
+    );
+
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +84,10 @@ class FullScreenImageState extends State<FullScreenImage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Photo(photoLink: widget.photo),
+            Hero(
+              tag: widget.heroTag,
+              child: Photo(photoLink: widget.photo),
+            ),
             const SizedBox(height: 11),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -80,17 +132,29 @@ class FullScreenImageState extends State<FullScreenImage> {
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
         children: [
-          UserAvatar(widget.userPhoto),
+          AnimatedBuilder(
+            animation: controller,
+            child: UserAvatar(widget.userPhoto),
+            builder: (context, Widget child) {
+              return Opacity(opacity: opacityAvatar.value, child: child);
+            },
+          ),
           SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                widget.name,
-                style: AppStyles.h1Black,
-              ),
-              Text("@${widget.userName}", style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
-            ],
+          AnimatedBuilder(
+            animation: controller,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  widget.name,
+                  style: AppStyles.h1Black,
+                ),
+                Text("@${widget.userName}", style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
+              ],
+            ),
+            builder: (context, Widget child) {
+              return Opacity(opacity: opacityDescription.value, child: child);
+            },
           ),
         ],
       ),
@@ -101,10 +165,11 @@ class FullScreenImageState extends State<FullScreenImage> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Expanded(
-            child: LikeButton(),
+          LikeButton(),
+          SizedBox(
+            width: 14,
           ),
           Expanded(
             child: _buildButton('Save'),

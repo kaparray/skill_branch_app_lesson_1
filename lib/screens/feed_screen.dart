@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:skill_branch_lesson_dart/res/res.dart';
-import 'package:skill_branch_lesson_dart/screens/photo_screen.dart';
-import 'package:skill_branch_lesson_dart/widgets/widgets.dart';
+import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/screens/photo_screen.dart';
+import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
 const String kFlutterDash =
     'https://flutter.dev/assets/404/dash_nest-c64796b59b65042a2b40fae5764c13b7477a592db79eaf04c86298dcb75b78ea.png';
@@ -15,7 +15,7 @@ class Feed extends StatefulWidget {
   _FeedState createState() => _FeedState();
 }
 
-class _FeedState extends State<Feed> {
+class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,14 +34,28 @@ class _FeedState extends State<Feed> {
   }
 
   Widget _buildItem(int index) {
+    final heroTag = 'feedItem_$index';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreenImage(photo: kFlutterDash,)));
-            },
-            child: Photo(photoLink: kFlutterDash)),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FullScreenImage(
+                  photo: kFlutterDash,
+                  altDescription: 'This is Flutter dash. I love him :)',
+                  userName: 'kaparray',
+                  name: 'Kirill Adeshchenko',
+                  userPhoto: 'https://skill-branch.ru/img/speakers/Adechenko.jpg',
+                  heroTag: heroTag,
+                ),
+              ),
+            );
+          },
+          child: Hero(tag: heroTag, child: Photo(photoLink: kFlutterDash)),
+        ),
         _buildPhotoMeta(index),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),

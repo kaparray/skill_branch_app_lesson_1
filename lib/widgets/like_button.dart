@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skill_branch_lesson_dart/res/res.dart';
+import 'package:FlutterGalleryApp/res/res.dart';
 
 class LikeButton extends StatefulWidget {
   LikeButton({this.likeCount = 0, this.isLiked = false});
