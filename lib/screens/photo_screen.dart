@@ -60,7 +60,7 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
         parent: controller,
         curve: Interval(
           0.0,
-          1.0,
+          0.5,
           curve: Curves.ease,
         ),
       ),

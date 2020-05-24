@@ -6,8 +6,9 @@ import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 import 'package:FlutterGalleryApp/screens/feed_screen.dart';
 
-
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets('Hero test', (WidgetTester tester) async {
     final GlobalKey key = GlobalKey();
 
@@ -28,16 +29,17 @@ void main() {
     final Hero topModalBarrier = tester.widget<Hero>(
       find.byType(Hero),
     );
+
     expect(topModalBarrier.tag, 'tag');
     expect(true, topModalBarrier.child.runtimeType == Photo);
   });
 
-  testWidgets('AnimatedBuilder UserAvatar', (WidgetTester tester) async {
-    final GlobalKey key = GlobalKey();
+  testWidgets('AnimatedBuilder', (WidgetTester tester) async {
+    final GlobalKey keyUserAvatar = GlobalKey();
 
     await tester.pumpWidget(
       MaterialApp(
-        key: key,
+        key: keyUserAvatar,
         home: FullScreenImage(
           photo: kFlutterDash,
           altDescription: 'This is Flutter dash. I love him :)',
@@ -50,20 +52,18 @@ void main() {
     );
 
     await tester.pump(const Duration(milliseconds: 300));
-    double oneFifth = _getOpacity(key, tester, false);
-    expect(0.3, (oneFifth * 10).roundToDouble() / 10);
+    double oneFifth = _getOpacity(keyUserAvatar, tester, false);
+    expect(0.7, (oneFifth * 10).roundToDouble() / 10);
 
     await tester.pump(const Duration(milliseconds: 800));
-    double full = _getOpacity(key, tester, false);
+    double full = _getOpacity(keyUserAvatar, tester, false);
     expect(1.0, (full * 10).roundToDouble() / 10);
-  });
 
-  testWidgets('AnimatedBuilder Column with name and userName', (WidgetTester tester) async {
-    final GlobalKey key = GlobalKey();
+    final keyName = GlobalKey();
 
     await tester.pumpWidget(
       MaterialApp(
-        key: key,
+        key: keyName,
         home: FullScreenImage(
           photo: kFlutterDash,
           altDescription: 'This is Flutter dash. I love him :)',
@@ -76,22 +76,32 @@ void main() {
     );
 
     await tester.pump(const Duration(milliseconds: 800));
-    double test1 = _getOpacity(key, tester, true);
+    double test1 = _getOpacity(keyName, tester, true);
     expect(0.1, (test1 * 10).roundToDouble() / 10);
 
     await tester.pump(const Duration(milliseconds: 1200));
-    double test2 = _getOpacity(key, tester, true);
+    double test2 = _getOpacity(keyName, tester, true);
     expect(1.0, (test2 * 10).roundToDouble() / 10);
   });
 }
 
 double _getOpacity(GlobalKey key, WidgetTester tester, bool isLast) {
-  final Finder finder = find.byType(Opacity);
+  bool isFadeTransition = false;
 
-  print(tester.widgetList(finder).toList());
+  Finder finder = find.byType(Opacity);
 
-  return tester.widgetList(isLast ? finder.last : finder.first).fold<double>(1.0, (double a, Widget widget) {
-    final Opacity transition = widget;
+  if (tester.widgetList(finder).toList().isEmpty) {
+    finder = find.byType(FadeTransition);
+    isFadeTransition = true;
+  }
+
+  print('list = ${tester.widgetList(finder).toList().join('\n')}');
+
+  if (isFadeTransition) {
+    final FadeTransition transition = tester.widgetList(finder).toList()[isLast ? 4 : 2];
+    return transition.opacity.value;
+  } else {
+    final Opacity transition = tester.widgetList(finder).toList()[isLast ? 1 : 0];
     return transition.opacity;
-  });
+  }
 }
