@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
+import '../main.dart';
+
 class FullScreenImageArguments {
   FullScreenImageArguments({
     this.key,
@@ -119,7 +121,7 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
                 widget.altDescription,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: AppStyles.h3,
+                style: Theme.of(context).textTheme.headline3,
               ),
             ),
             const SizedBox(height: 9),
@@ -137,28 +139,14 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
       elevation: 0,
       actions: <Widget>[
         IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: AppColors.grayChateau,
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.mercury,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(10, (index) => FlutterLogo()),
-                    ),
-                  );
-                },
-              );
-            })
+          icon: Icon(
+            Icons.more_vert,
+            color: AppColors.grayChateau,
+          ),
+          onPressed: () {
+            showModalBottomSheet(context: context, builder: (BuildContext context) => ClaimBottomSheet());
+          },
+        ),
       ],
       leading: IconButton(
         icon: Icon(
@@ -169,10 +157,7 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
       ),
       backgroundColor: AppColors.white,
       centerTitle: true,
-      title: Text(
-        'Photo',
-        style: AppStyles.h2Black,
-      ),
+      title: Text('Photo', style: Theme.of(context).textTheme.headline2),
     );
   }
 
@@ -196,9 +181,9 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
               children: <Widget>[
                 Text(
                   widget.name,
-                  style: AppStyles.h1Black,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
-                Text("@${widget.userName}", style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
+                Text("@${widget.userName}", style: Theme.of(context).textTheme.headline5.copyWith(color: AppColors.manatee)),
               ],
             ),
             builder: (context, Widget child) {
@@ -249,37 +234,7 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: _buildButton('Visit', () async {
-              OverlayState overlayState = Overlay.of(context);
-
-              OverlayEntry overlayEntry = OverlayEntry(
-                  builder: (BuildContext context) => Positioned(
-                      top: MediaQuery.of(context).viewInsets.top + 50,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.mercury,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 20),
-                              padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                              child: Text(
-                                'SkillBranch',
-                              ),
-                            ),
-                          ),
-                        ),
-                      )));
-              overlayState.insert(overlayEntry);
-              await new Future.delayed(Duration(seconds: 1));
-              overlayEntry?.remove();
-            }),
+            child: _buildButton('Visit', () async {}),
           ),
         ],
       ),
@@ -298,7 +253,7 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
         ),
         child: Text(
           text,
-          style: AppStyles.h4.copyWith(color: AppColors.white),
+          style: Theme.of(context).textTheme.headline4.copyWith(color: AppColors.white),
         ),
       ),
     );

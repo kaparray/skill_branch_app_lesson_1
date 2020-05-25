@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:FlutterGalleryApp/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:connectivity/connectivity.dart';
+
 import 'package:FlutterGalleryApp/res/res.dart';
 
-import 'demo_screen.dart';
 import 'feed_screen.dart';
 
 class Home extends StatefulWidget {
@@ -12,6 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
+  StreamSubscription subscription;
   int currentTab = 0;
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -43,6 +48,30 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      switch (result) {
+        case ConnectivityResult.wifi:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.mobile:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.none:
+          ConnectivityOverlay().showOverlay(context, Text('No internet connection'));
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavyBar(
@@ -52,16 +81,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         items: _tabs,
         currentTab: currentTab,
         onItemSelected: (index) async {
-          if (index == 1) {
-            var value = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-              return DemoScreen();
-            }));
-
-            print(value);
-          } else
-            setState(() {
-              currentTab = index;
-            });
+          setState(() {
+            currentTab = index;
+          });
         },
       ),
       body: PageStorage(
