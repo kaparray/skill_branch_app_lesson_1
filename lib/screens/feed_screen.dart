@@ -40,17 +40,17 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => FullScreenImage(
-                  photo: kFlutterDash,
-                  altDescription: 'This is Flutter dash. I love him :)',
-                  userName: 'kaparray',
-                  name: 'Kirill Adeshchenko',
-                  userPhoto: 'https://skill-branch.ru/img/speakers/Adechenko.jpg',
-                  heroTag: heroTag,
-                ),
+              '/fullScreenImage',
+              arguments: FullScreenImageArguments(
+                photo: kFlutterDash,
+                altDescription: 'This is Flutter dash. I love him :)',
+                userName: 'kaparray',
+                name: 'Kirill Adeshchenko',
+                userPhoto: 'https://skill-branch.ru/img/speakers/Adechenko.jpg',
+                heroTag: heroTag,
+                settings: RouteSettings(arguments: kFlutterDash)
               ),
             );
           },

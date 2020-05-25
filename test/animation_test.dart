@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,6 +10,29 @@ import 'package:FlutterGalleryApp/screens/feed_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  // Helpers
+  final Widget sliverBox = SliverToBoxAdapter(
+    child: Container(
+      color: Colors.amber,
+      height: 150.0,
+      width: 150,
+    ),
+  );
+  Widget boilerplate(
+    List<Widget> slivers, {
+    ScrollController controller,
+    Axis scrollDirection = Axis.vertical,
+  }) {
+    return MaterialApp(
+      home: Scaffold(
+        body: CustomScrollView(
+          scrollDirection: scrollDirection,
+          slivers: slivers,
+          controller: controller,
+        ),
+      ),
+    );
+  }
 
   testWidgets('Hero test', (WidgetTester tester) async {
     final GlobalKey key = GlobalKey();

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:FlutterGalleryApp/res/res.dart';
 
+import 'demo_screen.dart';
 import 'feed_screen.dart';
 
 class Home extends StatefulWidget {
@@ -50,10 +51,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         curve: Curves.ease,
         items: _tabs,
         currentTab: currentTab,
-        onItemSelected: (index) {
-          setState(() {
-            currentTab = index;
-          });
+        onItemSelected: (index) async {
+          if (index == 1) {
+            var value = await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+              return DemoScreen();
+            }));
+
+            print(value);
+          } else
+            setState(() {
+              currentTab = index;
+            });
         },
       ),
       body: PageStorage(

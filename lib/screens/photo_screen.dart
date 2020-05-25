@@ -4,6 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 
+class FullScreenImageArguments {
+  FullScreenImageArguments({
+    this.key,
+    this.photo,
+    this.altDescription,
+    this.userName,
+    this.name,
+    this.userPhoto,
+    this.heroTag,
+    this.settings,
+  });
+
+  final Key key;
+  final String photo;
+  final String altDescription;
+  final String userName;
+  final String name;
+  final String userPhoto;
+  final String heroTag;
+  final RouteSettings settings;
+}
+
 class FullScreenImage extends StatefulWidget {
   FullScreenImage({
     this.photo = '',
@@ -77,6 +99,8 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
 
   @override
   Widget build(BuildContext context) {
+    print(ModalRoute.of(context).settings.arguments);
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(),
@@ -111,6 +135,31 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0,
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: AppColors.grayChateau,
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.mercury,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(10, (index) => FlutterLogo()),
+                    ),
+                  );
+                },
+              );
+            })
+      ],
       leading: IconButton(
         icon: Icon(
           CupertinoIcons.back,
@@ -172,28 +221,85 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
             width: 14,
           ),
           Expanded(
-            child: _buildButton('Save'),
+            child: _buildButton('Save', () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Alert Dialog title"),
+                    content: Text("Alert Dialog body"),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("Ok"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: _buildButton('Visit'),
+            child: _buildButton('Visit', () async {
+              OverlayState overlayState = Overlay.of(context);
+
+              OverlayEntry overlayEntry = OverlayEntry(
+                  builder: (BuildContext context) => Positioned(
+                      top: MediaQuery.of(context).viewInsets.top + 50,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.mercury,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                              child: Text(
+                                'SkillBranch',
+                              ),
+                            ),
+                          ),
+                        ),
+                      )));
+              overlayState.insert(overlayEntry);
+              await new Future.delayed(Duration(seconds: 1));
+              overlayEntry?.remove();
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildButton(String text) {
-    return Container(
-      alignment: Alignment.center,
-      height: 36,
-      decoration: BoxDecoration(
-        color: AppColors.dodgerBlue,
-        borderRadius: BorderRadius.circular(7),
-      ),
-      child: Text(
-        text,
-        style: AppStyles.h4.copyWith(color: AppColors.white),
+  Widget _buildButton(String text, VoidCallback callback) {
+    return GestureDetector(
+      onTap: callback,
+      child: Container(
+        alignment: Alignment.center,
+        height: 36,
+        decoration: BoxDecoration(
+          color: AppColors.dodgerBlue,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Text(
+          text,
+          style: AppStyles.h4.copyWith(color: AppColors.white),
+        ),
       ),
     );
   }
