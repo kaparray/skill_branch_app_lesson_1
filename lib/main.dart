@@ -10,12 +10,13 @@ void main() {
 }
 
 class ConnectivityOverlay {
-  ConnectivityOverlay._();
-  static ConnectivityOverlay _connectivityOverlay;
+  static final ConnectivityOverlay _singleton = ConnectivityOverlay._internal();
 
-  ConnectivityOverlay() {
-    _connectivityOverlay ??= ConnectivityOverlay._();
+  factory ConnectivityOverlay() {
+    return _singleton;
   }
+
+  ConnectivityOverlay._internal();
 
   static OverlayEntry overlayEntry;
 

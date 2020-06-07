@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
-
-import '../main.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class FullScreenImageArguments {
   FullScreenImageArguments({
@@ -101,8 +100,6 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context).settings.arguments);
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(),
@@ -144,7 +141,14 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
             color: AppColors.grayChateau,
           ),
           onPressed: () {
-            showModalBottomSheet(context: context, builder: (BuildContext context) => ClaimBottomSheet());
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) => ClaimBottomSheet(
+                onClaims: (int value) {
+                  Navigator.pop(context);
+                },
+              ),
+            );
           },
         ),
       ],
@@ -211,13 +215,15 @@ class FullScreenImageState extends State<FullScreenImage> with TickerProviderSta
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text("Alert Dialog title"),
-                    content: Text("Alert Dialog body"),
+                    title: Text("Downloading photos"),
+                    content: Text('Are you sure you want to upload a photo?'),
                     actions: <Widget>[
                       FlatButton(
-                        child: Text("Ok"),
+                        child: Text("Download"),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          GallerySaver.saveImage(widget.photo).then((bool success) {
+                            Navigator.of(context).pop();
+                          });
                         },
                       ),
                       FlatButton(

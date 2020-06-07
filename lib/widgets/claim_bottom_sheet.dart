@@ -5,8 +5,8 @@ import 'package:FlutterGalleryApp/res/res.dart';
 
 class ClaimBottomSheet extends StatelessWidget {
   ClaimBottomSheet({
-    this.onClaims,
-  });
+    @required this.onClaims,
+  }) : assert(onClaims != null, 'ValueChanged is not null');
 
   final ValueChanged<int> onClaims;
 
@@ -14,7 +14,6 @@ class ClaimBottomSheet extends StatelessWidget {
     'adult',
     'harm',
     'bully',
-    'violence',
     'spam',
     'copyright',
     'hate',
@@ -23,10 +22,7 @@ class ClaimBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.mercury,
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -34,14 +30,17 @@ class ClaimBottomSheet extends StatelessWidget {
           int index = climeTypes.indexOf(e);
 
           return _buildClaimElement(e, index, context);
-        }).toList(),
+        }).toList()
+          ..add(
+            SizedBox(height: 33),
+          ),
       ),
     );
   }
 
   Widget _buildClaimElement(String type, int index, BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return InkWell(
+      splashColor: AppColors.dodgerBlue,
       onTap: () {
         onClaims(index);
       },
@@ -56,7 +55,6 @@ class ClaimBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          if (index == climeTypes.length - 1) SizedBox(height: 33)
         ],
       ),
     );

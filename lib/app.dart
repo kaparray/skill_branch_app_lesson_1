@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:connectivity/connectivity.dart';
+
 import 'package:FlutterGalleryApp/res/res.dart';
 
 import 'screens/404.dart';
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: Home(Connectivity().onConnectivityChanged),
       theme: ThemeData(
         textTheme: buildAppTextTheme(),
       ),
@@ -31,8 +33,9 @@ class MyApp extends StatelessWidget {
           );
 
           return _buildRoute(child, arguments: args);
-        } else
-          return _buildRoute(PageNotFound());
+        }
+
+        return null;
       },
       debugShowCheckedModeBanner: false,
     );

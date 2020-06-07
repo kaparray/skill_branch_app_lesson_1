@@ -11,6 +11,10 @@ import 'package:FlutterGalleryApp/res/res.dart';
 import 'feed_screen.dart';
 
 class Home extends StatefulWidget {
+  Home(this.onConnectivityChanged);
+
+  final Stream<ConnectivityResult> onConnectivityChanged;
+
   @override
   State<StatefulWidget> createState() => _HomeState();
 }
@@ -50,7 +54,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    subscription = widget.onConnectivityChanged.listen((ConnectivityResult result) {
       switch (result) {
         case ConnectivityResult.wifi:
           ConnectivityOverlay().removeOverlay(context);
