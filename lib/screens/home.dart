@@ -21,6 +21,31 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   StreamSubscription subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    subscription = widget.onConnectivityChanged.listen((ConnectivityResult result) {
+      switch (result) {
+        case ConnectivityResult.wifi:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.mobile:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.none:
+          ConnectivityOverlay().showOverlay(context, Text('No internet connection'));
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
+  }
+
   int currentTab = 0;
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -50,30 +75,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       inactiveColor: AppColors.manatee,
     ),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    subscription = widget.onConnectivityChanged.listen((ConnectivityResult result) {
-      switch (result) {
-        case ConnectivityResult.wifi:
-          ConnectivityOverlay().removeOverlay(context);
-          break;
-        case ConnectivityResult.mobile:
-          ConnectivityOverlay().removeOverlay(context);
-          break;
-        case ConnectivityResult.none:
-          ConnectivityOverlay().showOverlay(context, Text('No internet connection'));
-          break;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    subscription.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
